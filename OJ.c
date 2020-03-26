@@ -1,7 +1,6 @@
-﻿#pragma warning(disable:4996)
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
+// #include <stdbool.h>   bool函数的头文件
 
 /*1. 给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。
     有效字符串需满足：
