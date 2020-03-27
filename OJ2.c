@@ -1,6 +1,7 @@
 ﻿#include <stdio.h>
 #include <stdlib.h>
 
+
 // 用队列实现栈(先进先出 --> 后进先出)
 /*使用队列实现栈的下列操作：
 
@@ -17,13 +18,11 @@ empty() --返回栈是否为空
 // 1. 把元素放进队列后也就相当于把元素放进栈里
 // 2. 把队列中的元素删除(Pop)后重新又放进去(Push) 直到把想要Pop的元素删除掉等同于出栈,然后再Push新的
 // 3. 
-
-
 typedef int Datatype;
 // 定义结点
 typedef struct Node{
-	struct Node* _next;
 	Datatype _data;
+	struct Node* _next;
 }Node;
 
 // 定义队列
@@ -33,6 +32,10 @@ typedef struct Queue{
 	Node* _rear;
 	size_t _size;
 }Queue; 
+
+typedef struct {
+	Queue _q;
+}MyStack;
 
 void queueInit(Queue* q){
 	q->_front = q->_rear = NULL;
@@ -94,20 +97,19 @@ void queueDestory(Queue* q){
 //	size_t _capacity;
 //}Queue;
 // 用一个队列实现栈
-typedef struct {
-	Queue _q;
-} MyStack;
+
 
 /** Initialize your data structure here. */
 // 返回的是一个指针 所以需要动态的创建一个栈 
-MyStack* myStackCreate() {
+MyStack* myStackCreate(MyStack* obj) {
 	MyStack* ms = (MyStack*)malloc(sizeof(MyStack));
-	queueInit(&ms->_q);
+	queueInit(&obj->_q);
 	return ms;
 }
 
 /** Push element x onto stack. */
-void myStackPush(MyStack* obj, int x) {
+
+void myStackPush(MyStack* obj, Datatype x) {
 	queuePush(&obj->_q, x);
 }
 
@@ -146,14 +148,14 @@ void myStackFree(MyStack* obj) {
 }
 void test(){
 	MyStack obj;
-	myStackCreate();
+	myStackCreate(&obj);
 	myStackPush(&obj, 1);
 	myStackPush(&obj, 2);
 	myStackPush(&obj, 3);
 	myStackPush(&obj, 4);
 	myStackPush(&obj, 5);
 	while (myStackEmpty(&obj) != 1){
-		printf("%d ", myStackPop(&obj));
+		printf("%d ", myStackTop(&obj));
 		myStackPop(&obj);
 	}
 	printf("\n");
