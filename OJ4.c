@@ -16,7 +16,7 @@ isEmpty() : 检查循环队列是否为空。
 isFull() : 检查循环队列是否已满。
 */
 
-// 循环队列
+// 循环队列(定长, 先进先出 逻辑上循环 物理上为线性结构, 通过数组来实现,如果越界,会返回到0的位置)
 // 存放元素的时候 元素的大小是固定的, 物理的存放形式仍是一个线性的结构, 都相当于是一个顺序表(数组)
 // 有队头和队尾 
 // 删除一个元素 头往后走一个 插入一个元素 尾往前走
@@ -57,14 +57,29 @@ MyCircularQueue* myCircularQueueCreate(int k) {
 	q->_front = q->_rear = 0;
 	// 队列长度为k 实际能存放的元素个数
 	q->_k = k;
+	return q;
+}
+
+// 判断队列是否为空, size==0, 或者front=rear
+int myCircularQueueIsEmpty(MyCircularQueue* obj) {
+	if (obj->_front == obj->_rear)
+		return 1;
+	return 0;
+}
+
+// 判断队列是否已满 size=数组大小, 或者(rear+1)%数组大小 == front
+int myCircularQueueIsFull(MyCircularQueue* obj) {
+	if ((obj->_rear + 1) % (obj->_k + 1) == obj->_front)
+		return 1;
+	return 0;
 }
 
 // 向循环队列中插入一个元素, 如果成功插入 则返回真
 int myCircularQueueEnQueue(MyCircularQueue* obj, int value) {
 	// 如为满的(为1) 不能插入
-	if (myCircularQueueIsFull(&obj))
+	if (myCircularQueueIsFull(obj))
 		return 0;
-	// 队尾插入
+	// 队尾插入 再++rear, 若越界 则置为0
 	obj->_array[obj->_rear++] = value;
 	// 判断队尾是否已越界 若越界 则循环(k是可以访问到的, k+1是访问不到的, 走到k+1越界)
 	if (obj->_rear == obj->_k + 1)
@@ -92,25 +107,19 @@ int myCircularQueueFront(MyCircularQueue* obj) {
 	return obj->_array[obj->_front];
 }
 
-// 获取队尾元素, 如果队列为空, 返回-1,
+// 获取队尾元素, 如果队列为空, 返回-1, 返回的是数组[rear-1],若尾指针rear为0, 返回数组[数组大小-1]
 int myCircularQueueRear(MyCircularQueue* obj) {
+	// 返回的是rear的前一个位置
 	if (myCircularQueueIsEmpty(obj))
 		return -1;
+	// 如果rear执行起始位置, 说明最后一个元素在数组的末尾
 	if (obj->_rear == 0)
 		return obj->_array[obj->_k];
 	return obj->_array[obj->_rear - 1];
 }
 
-// 判断队列是否为空
-bool myCircularQueueIsEmpty(MyCircularQueue* obj) {
-
-}
-
-// 判断队列是否已满
-bool myCircularQueueIsFull(MyCircularQueue* obj) {
-
-}
 
 void myCircularQueueFree(MyCircularQueue* obj) {
-
+	free(obj->_array);
+	free(obj);
 }
